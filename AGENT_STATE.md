@@ -1,38 +1,36 @@
 # AGENT_STATE
 
 ## Cel
-Duo Język: polska mapa nauki programowania z AI + seria dni + codzienne przypomnienia na telefon (styl Duolingo), dla kilku osób, z maskotką Korą (oryginalny owczarek collie).
+Duo Język: platforma lekcji w stylu Duolingo (ścieżka, serduszka, XP, dzienny cel, seria, przypomnienia), z profilami bez rejestracji i osobnymi kursami:
+- Damian: Programowanie z AI
+- Marcin: Angielski (zna słówka, bez czasów → czasy)
+- Diana: Medycyna genetyczna (zaawansowana), Motocykl (zaawansowany), Angielski (czasy, wymowa, słuchanie)
+- Teresa: Szachy (od zasad do taktyki), Grzyby i lasy grzybowe w Polsce (zaawansowane, bezpieczeństwo)
 
 ## Zrobione
-- v1: mapa po polsku, 5 etapów, 28 zadań.
-- v2: seria dni, sesja dnia (5/15/30 min), pasek tygodnia, przypomnienia przez GitHub Actions + ntfy.
-- v3: profile bez rejestracji (Marcin, Teresa, Diana, Damian + „Dodaj osobę”), osobny postęp i przypomnienia dla każdej osoby, strefa czasowa z przeglądarki, Kora w panelu dnia (nastrój: zadowolona / czeka / smutna), instalacja na ekran telefonu (manifest, service worker, skróty ?sesja=5|15, karta „Dodaj Duo Język na ekran telefonu” dla Androida i iPhone'a, plakietka na ikonie).
-- Strona główna: repo dakowa/dakowa.github.io z listą projektów.
+- v1–v3: mapa nauki, seria dni, przypomnienia (GitHub Actions + ntfy), profile, Kora, instalacja na ekran.
+- v4 (gałąź `lekcje`): nowy silnik lekcji w `index.html`; kurs `kursy/programowanie.js` (7 lekcji grywalnych + 2 działy „wkrótce”). Test automatyczny przechodzi wszystkie lekcje.
+
+## W toku
+- Kursy: angielski, genetyka, motocykl, szachy, grzyby (`kursy/*.js`).
+- Przypomnienia: neutralne treści z nazwą kursu (skrypt czyta `kurs` z sygnału).
+- Manifest: skróty `?lekcja=dalej` i `?lekcja=powtorka` zamiast `?sesja=`.
 
 ## Pliki
-- `index.html`: cała aplikacja (bez zależności).
-- `manifest.webmanifest`, `sw.js`: instalacja na ekran i praca offline (najpierw sieć).
-- `ikony/kora.svg`: źródło ikony; PNG generowane z niego na Macu (qlmanage + sips).
-- `_przypomnienia/przypomnij.mjs`: logika przypomnień dla wielu osób.
-- `_przypomnienia/ustawienia.json`: strefa domyślna, godziny, lista profili z imionami.
-- `_przypomnienia/stan.json`: stan per profil (zapisuje workflow).
-- `.github/workflows/przypomnienia.yml`: harmonogram (minuta 17 każdej godziny), tryb test z wyborem profilu.
+- `index.html`: silnik (profile, kursy, ścieżka, lekcja, 11 typów zadań, ntfy, instalacja).
+- `kursy/<id>.js`: treść kursu, `window.KURSY[id] = { tytul, krotko, kolor, opis, mowa?, uwaga?, dzialy: [{ tytul, opis, lekcje: [{ id, tytul, zadania: [...] }] }] }`.
+- Typy zadań: info, wybor, luka, kafelki, pary, sluchaj, dyktando, mow, wpisz, blad, szachy.
+- `_przypomnienia/`, `.github/workflows/przypomnienia.yml`, `manifest.webmanifest`, `sw.js`, `ikony/`.
 
 ## Decyzje
-- Profile tylko lokalnie (localStorage, klucze z sufiksem `:id`). Dane sprzed profili przeniesione do Damiana.
-- Link konfiguracyjny: `#polacz=<temat>~<log>~<profil>`; stary format bez profilu = Damian.
-- Sekrety: NTFY_TOPICS (JSON id → temat), NTFY_LOG_TOPIC (wspólny), NTFY_TOPIC (stary, dla Damiana). Tematy nigdy w plikach repo.
-- Osoba dostaje przypomnienia dopiero po otwarciu swojego linku (sygnał „polaczenie”).
-- Nowa osoba dodana w aplikacji nie ma przypomnień, dopóki nie dodamy jej tematu do NTFY_TOPICS (bezpieczeństwo: tematy nie trafiają do publicznego stanu).
-- Prawdziwy widżet niemożliwy dla strony WWW; zamiast tego ikona PWA ze skrótami.
-- Maskotka: oryginalna Kora, nie Lassie (chroniona postać).
+- Postęp lokalny per profil: klucze `duo-jezyk-kursy-v1:<id>`, `duo-jezyk-dni-v1:<id>` (XP dziennie), `duo-jezyk-serca-v1:<id>`.
+- Serduszka: 5, +1 na godzinę; powtórki nie zabierają serduszek i zwracają 1.
+- XP: lekcja 10 (+5 bez błędów), powtórka 5. Dzienny cel 20 XP.
+- Błędne zadanie wraca na koniec lekcji.
+- Pracuję na gałęzi `lekcje`; scalam do `main` dopiero, gdy wszystkie kursy przejdą testy.
 
 ## Testy
-- Playwright: profile, migracja, linki (nowy i stary format), skrót ?sesja=15, karta instalacji (Android, iPhone, komputer), tryb ciemny, telefon.
-- Skrypt: scenariusze jednej osoby (14) + wielu osób (migracja, strefy Dublin/Warszawa, zła strefa, stary sygnał, test dla profilu, brak profilu).
-
-## Otwarte
-- Marcin, Teresa i Diana muszą zainstalować ntfy i otworzyć swoje linki.
+- `scratchpad/test_engine.py` + `lesson_bot.py`: Playwright przechodzi całe kursy przez UI (poprawne i błędne odpowiedzi).
 
 ## Następny krok
-- Brak. Nowa osoba z przypomnieniami: wygeneruj temat, dopisz do NTFY_TOPICS i do `profile` w ustawieniach, daj link.
+- Napisać `kursy/angielski.js`, przetestować słuchanie/dyktando/mówienie.
