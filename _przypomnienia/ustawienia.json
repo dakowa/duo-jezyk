@@ -6,5 +6,12 @@
   "najpozniej": 22,
   "ciszaPoDniach": 7,
   "aplikacja": "https://dakowa.github.io/duo-jezyk/",
-  "serwer": "https://ntfy.sh"
+  "ikona": "https://dakowa.github.io/duo-jezyk/ikony/kora-192.png",
+  "serwer": "https://ntfy.sh",
+  "profile": [
+    { "id": "marcin", "imie": "Marcin" },
+    { "id": "teresa", "imie": "Teresa" },
+    { "id": "diana", "imie": "Diana" },
+    { "id": "damian", "imie": "Damian" }
+  ]
 }

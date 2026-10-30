@@ -2,13 +2,17 @@ name: Przypomnienia
 
 on:
   schedule:
-    - cron: '17 * * * *'   # co godzinę; skrypt sam decyduje, czy wysłać
+    - cron: '17 * * * *'   # co godzinę; skrypt sam decyduje, komu i czy wysłać
   workflow_dispatch:
     inputs:
       tryb:
         description: 'normalny albo test (test wysyła przykładowe przypomnienie od razu)'
         required: false
         default: 'normalny'
+      profil:
+        description: 'dla trybu test: damian, marcin, teresa albo diana'
+        required: false
+        default: 'damian'
 
 permissions:
   contents: write
@@ -24,12 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sprawdź sesje i wyślij przypomnienie
+      - name: Sprawdź sesje i wyślij przypomnienia
         run: node _przypomnienia/przypomnij.mjs
         env:
+          NTFY_TOPICS: ${{ secrets.NTFY_TOPICS }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           NTFY_LOG_TOPIC: ${{ secrets.NTFY_LOG_TOPIC }}
           TRYB: ${{ github.event.inputs.tryb || 'normalny' }}
+          PROFIL: ${{ github.event.inputs.profil || 'damian' }}
 
       - name: Zapisz stan
         run: |
