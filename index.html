@@ -1261,7 +1261,11 @@
   var q = new URLSearchParams(location.search).get('lekcja');
   if (q) {
     try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
-    if (prof.active && course()) $('startBtn').click();
+    if (prof.active && course()) {
+      var c0 = course(), doneL = flat(c0).filter(function (f) { return isDone(c0.id, f.lesson.id); });
+      if (q === 'powtorka' && doneL.length) startLesson(c0, doneL[Math.floor(Math.random() * doneL.length)].lesson, true);
+      else $('startBtn').click();
+    }
   }
   // Test hook for automated checks (no effect for normal use)
   window.__duo = { kursy: KURSY, cur: function () { return L && L.state === 'answer' ? L.z : null; }, start: function (cid, lid, practice) { var c = KURSY[cid]; var f = flat(c).filter(function (x) { return x.lesson.id === lid; })[0]; startLesson(c, f.lesson, !!practice); } };

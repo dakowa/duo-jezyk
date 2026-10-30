@@ -1,6 +1,7 @@
 // Duo Język: offline support. Network first, so updates appear right away when online.
-var CACHE = 'duo-jezyk-v3';
-var SHELL = ['./', 'manifest.webmanifest', 'ikony/kora.svg', 'ikony/kora-192.png'];
+var CACHE = 'duo-jezyk-v4';
+var SHELL = ['./', 'manifest.webmanifest', 'ikony/kora.svg', 'ikony/kora-192.png',
+  'kursy/programowanie.js', 'kursy/angielski.js', 'kursy/genetyka.js', 'kursy/motocykl.js', 'kursy/szachy.js', 'kursy/grzyby.js'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); }));

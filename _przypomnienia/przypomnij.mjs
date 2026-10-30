@@ -93,6 +93,7 @@ for (const line of (await res.text()).split('\n')) {
   if (!ID.test(id)) continue;
   const p = person(id);
   if (body && typeof body.strefa === 'string' && validZone(body.strefa)) p.strefa = body.strefa;
+  if (body && typeof body.kurs === 'string' && ID.test(body.kurs)) p.kurs = body.kurs;
   const zone = p.strefa || cfg.strefa;
   const today = inZone(nowDate, zone).date;
   const at = inZone(new Date(m.time * 1000), zone);
@@ -127,7 +128,7 @@ function situation(id, p) {
   const hours = Object.values(p.godziny).sort((a, b) => a - b);
   let first = cfg.pierwszePrzypomnienie;
   if (hours.length >= 3) first = Math.min(Math.max(hours[Math.floor(hours.length / 2)], cfg.najwczesniej), cfg.ostatniaSzansa - 1);
-  return { id, zone, now, last, przerwa, seria, first };
+  return { id, zone, now, last, przerwa, seria, first, kurs: (cfg.kursy || {})[p.kurs] || '' };
 }
 
 function decide(s, p) {
@@ -145,32 +146,33 @@ function decide(s, p) {
 // ---------- 3. Messages (Kora is the collie mascot) ----------
 function message(kind, s) {
   const n = s.seria, k = s.przerwa === null ? 0 : s.przerwa - 1, imie = imieOf(s.id); // k = full days missed
+  const kurs = s.kurs ? ` (${s.kurs})` : '';
   const T = {
     start: [
-      { t: `Cześć, ${imie}! Pierwsza sesja czeka`, m: 'Pięć minut dziś to pierwszy dzień Twojej serii.' },
-      { t: 'Zacznij serię dzisiaj', m: 'Jedna krótka sesja z AI i ogień zapłonie. Kora już merda ogonem.' }
+      { t: `Cześć, ${imie}! Pierwsza lekcja czeka`, m: `Kilka minut dziś to pierwszy dzień Twojej serii.` },
+      { t: 'Zacznij serię dzisiaj', m: 'Jedna krótka lekcja i ogień zapłonie. Kora już merda ogonem.' }
     ],
     dzis: [
-      { t: `Seria: ${n} ${dni(n)}. Dziś też?`, m: 'Jedna krótka sesja przedłuży serię. Wystarczy 5 minut.' },
-      { t: `${imie}, czas na Duo Język`, m: `Twoja seria ma ${n} ${dni(n)}. Nie daj jej zgasnąć.` },
-      { t: 'Kora czeka na spacer z kodem', m: `${n} ${dni(n)} z rzędu. Dorzuć dzisiejszy dzień.` }
+      { t: `Seria: ${n} ${dni(n)}. Dziś też?`, m: `Jedna krótka lekcja${kurs} przedłuży serię.` },
+      { t: `${imie}, czas na lekcję`, m: `Twoja seria ma ${n} ${dni(n)}. Nie daj jej zgasnąć.` },
+      { t: 'Kora czeka na Ciebie', m: `${n} ${dni(n)} z rzędu. Dorzuć dzisiejszy dzień.` }
     ],
     ostatnia: [
-      { t: `${imie}, seria ${n} ${dni(n)} zgaśnie o północy`, m: 'Masz jeszcze czas. Pięć minut wystarczy, żeby ją uratować.' },
+      { t: `${imie}, seria ${n} ${dni(n)} zgaśnie o północy`, m: 'Masz jeszcze czas. Jedna krótka lekcja wystarczy, żeby ją uratować.' },
       { t: 'Ostatnia szansa na dziś', m: `Za kilka godzin stracisz serię ${n} ${dni(n)}. Kora trzyma kciuki. Znaczy: łapy.` }
     ],
     przerwa:
       k <= 1 ? [
-        { t: 'Seria zgasła', m: `Wczoraj nie było sesji, ${imie}. Zacznij nową serię dziś, od 5 minut.` },
+        { t: 'Seria zgasła', m: `Wczoraj nie było lekcji, ${imie}. Zacznij nową serię dziś.` },
         { t: 'Nowy start', m: 'Wczorajszy dzień przepadł. Dzisiejszy jeszcze nie.' }
       ] : k === 2 ? [
-        { t: 'Dwa dni bez kodu', m: 'Kod sam się nie napisze. Dobra, AI go napisze. Ale to Ty musisz go zrozumieć.' }
+        { t: 'Dwa dni bez nauki', m: `Pamięć lubi powtórki. Jedna lekcja${kurs} i wracasz na ścieżkę.` }
       ] : k <= 4 ? [
-        { t: 'Kora patrzy na drzwi', m: `Od ${k} dni nikt nie wyszedł z nią na spacer z kodem. 15 minut i jesteście kwita.` },
-        { t: 'Halo, jest tam kto?', m: `${k} dni przerwy. Jedna sesja dziś i wracasz do gry.` }
+        { t: 'Kora patrzy na drzwi', m: `Od ${k} dni nikt nie wyszedł z nią na naukowy spacer. Jedna lekcja i jesteście kwita.` },
+        { t: 'Halo, jest tam kto?', m: `${k} dni przerwy. Jedna lekcja dziś i wracasz do gry.` }
       ] : [
         { t: 'Nie odpuszczaj teraz', m: `${k} dni przerwy to jeszcze nie koniec. Pierwszy krok trwa 5 minut.` },
-        { t: 'Python za Tobą tęskni', m: 'Kora też. Otwórz edytor na 5 minut i zobacz, co się stanie.' }
+        { t: 'Kora za Tobą tęskni', m: s.kurs ? `Otwórz kurs „${s.kurs}” na 5 minut i zobacz, co się stanie.` : 'Otwórz aplikację na 5 minut i zobacz, co się stanie.' }
       ],
     cisza: [
       { t: 'Te przypomnienia chyba nie działają', m: `Kora robi przerwę i przestaje pisać. Gdy wrócisz, ${imie}, wróci i ona.` }

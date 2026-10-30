@@ -9,9 +9,29 @@
   "ikona": "https://dakowa.github.io/duo-jezyk/ikony/kora-192.png",
   "serwer": "https://ntfy.sh",
   "profile": [
-    { "id": "marcin", "imie": "Marcin" },
-    { "id": "teresa", "imie": "Teresa" },
-    { "id": "diana", "imie": "Diana" },
-    { "id": "damian", "imie": "Damian" }
-  ]
+    {
+      "id": "marcin",
+      "imie": "Marcin"
+    },
+    {
+      "id": "teresa",
+      "imie": "Teresa"
+    },
+    {
+      "id": "diana",
+      "imie": "Diana"
+    },
+    {
+      "id": "damian",
+      "imie": "Damian"
+    }
+  ],
+  "kursy": {
+    "programowanie": "Programowanie z AI",
+    "angielski": "Angielski",
+    "genetyka": "Medycyna genetyczna",
+    "motocykl": "Motocykl",
+    "szachy": "Szachy",
+    "grzyby": "Grzyby"
+  }
 }

@@ -2,7 +2,7 @@
   "id": "/duo-jezyk/",
   "name": "Duo Język",
   "short_name": "Duo Język",
-  "description": "Ty i AI w jednej drużynie. Seria dni i codzienna nauka programowania z Korą.",
+  "description": "Lekcje w stylu Duolingo dla całej rodziny: seria dni, serduszka i Kora.",
   "lang": "pl",
   "start_url": "/duo-jezyk/?zrodlo=ekran",
   "scope": "/duo-jezyk/",
@@ -11,22 +11,49 @@
   "background_color": "#EDF1F7",
   "theme_color": "#2F5DE0",
   "icons": [
-    { "src": "ikony/kora-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "ikony/kora-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "ikony/kora-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "ikony/kora-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "ikony/kora-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "ikony/kora-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
     {
-      "name": "Zalicz 15 minut",
-      "short_name": "15 minut",
-      "url": "/duo-jezyk/?sesja=15",
-      "icons": [{ "src": "ikony/skrot-96.png", "sizes": "96x96", "type": "image/png" }]
+      "name": "Następna lekcja",
+      "short_name": "Lekcja",
+      "url": "/duo-jezyk/?lekcja=dalej",
+      "icons": [
+        {
+          "src": "ikony/skrot-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
-      "name": "Zalicz 5 minut",
-      "short_name": "5 minut",
-      "url": "/duo-jezyk/?sesja=5",
-      "icons": [{ "src": "ikony/skrot-96.png", "sizes": "96x96", "type": "image/png" }]
+      "name": "Szybka powtórka",
+      "short_name": "Powtórka",
+      "url": "/duo-jezyk/?lekcja=powtorka",
+      "icons": [
+        {
+          "src": "ikony/skrot-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
