@@ -215,7 +215,9 @@
   .ex-type { font-size: .875rem; font-weight: 700; color: var(--muted); margin: 10px 0 4px; }
   .ex-q { font-family: "Bricolage Grotesque", "Figtree", sans-serif; font-size: 1.4375rem; font-weight: 700; line-height: 1.25; margin: 0 0 16px; }
   .ex-prompt { display: flex; gap: 12px; align-items: center; margin: 0 0 18px; }
-  .ex-prompt .bubble { font-size: 1.125rem; }
+  .ex-prompt .bubble { font-size: 1.125rem; background: var(--surface); border: 2px solid var(--rule); }
+  .ex-prompt .bubble::before { border-color: transparent var(--rule) transparent transparent; }
+  .streak-tag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: var(--xp); color: #fff; font-size: .8125rem; font-weight: 800; vertical-align: middle; font-family: "Figtree", sans-serif; }
   pre.code {
     margin: 0 0 16px; padding: 14px 16px; border-radius: 14px; background: #0F1626; color: #E6EDF7; font-size: .9375rem;
     line-height: 1.5; overflow-x: auto; white-space: pre;
@@ -307,11 +309,6 @@
   .t3 { border-radius: 14px; border: 2px solid var(--c); overflow: hidden; }
   .t3 small { display: block; background: var(--c); color: #fff; font-weight: 800; font-size: .75rem; padding: 4px; }
   .t3 b { display: block; padding: 10px 4px; font-size: 1.25rem; }
-  .combo {
-    position: fixed; left: 50%; top: 72px; transform: translateX(-50%) scale(.8); opacity: 0; z-index: 30;
-    background: var(--xp); color: #fff; font-weight: 800; padding: 6px 14px; border-radius: 999px; transition: all .25s ease; pointer-events: none;
-  }
-  .combo.show { opacity: 1; transform: translateX(-50%) scale(1); }
 
   .toast {
     position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); opacity: 0;
@@ -436,7 +433,6 @@
   <div class="l-body"><div class="l-inner" id="lBody"></div></div>
   <div class="l-foot" id="lFoot"><div class="in" id="lFootIn"></div></div>
 </div>
-<div class="combo" id="combo"></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="kursy/programowanie.js"></script>
@@ -874,7 +870,6 @@
     var res = L.h.check(); L.state = 'feedback';
     if (res.ok) {
       L.done++; L.run++; sfx.ok();
-      if (L.run === 3 || L.run === 5 || L.run === 8) combo(L.run + ' z rzędu!');
     } else {
       L.mistakes++; L.run = 0; sfx.bad();
       L.queue.push(L.z);
@@ -883,7 +878,8 @@
     setBar();
     var praise = ['Świetnie!', 'Dobrze!', 'Brawo!', 'Tak trzymaj!', 'Dokładnie tak!'];
     lFoot.className = 'l-foot ' + (res.ok ? 'ok' : 'bad');
-    lFootIn.innerHTML = '<div class="fb">' + kora(res.ok ? 'happy' : 'sad') + '<div><h3>' + (res.ok ? praise[Math.floor(Math.random() * praise.length)] : 'Nie tym razem') + '</h3>' +
+    var runTag = res.ok && (L.run === 3 || L.run === 5 || L.run >= 8) ? '<span class="streak-tag">' + L.run + ' z rzędu!</span>' : '';
+    lFootIn.innerHTML = '<div class="fb">' + kora(res.ok ? 'happy' : 'sad') + '<div><h3>' + (res.ok ? praise[Math.floor(Math.random() * praise.length)] : 'Nie tym razem') + runTag + '</h3>' +
       (!res.ok && res.correct ? '<p>Poprawna odpowiedź: <span class="ans">' + esc(res.correct) + '</span></p>' : '') +
       (L.z.wyj ? '<p>' + md(L.z.wyj) + '</p>' : '') + '</div></div>' +
       '<button class="check ' + (res.ok ? '' : 'bad') + '" type="button" id="goBtn">Dalej</button>';
@@ -893,8 +889,6 @@
     };
     $('goBtn').focus();
   }
-  var comboTimer;
-  function combo(text) { var c = $('combo'); c.textContent = text; c.classList.add('show'); clearTimeout(comboTimer); comboTimer = setTimeout(function () { c.classList.remove('show'); }, 1300); }
 
   function finish() {
     L.state = 'end';
