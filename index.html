@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duo Język</title>
+<meta name="description" content="Ty i AI w jednej drużynie. Mapa nauki programowania z Cursorem, Claude i Gemini.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='11' cy='16' r='8' fill='%232F5DE0'/%3E%3Ccircle cx='21' cy='16' r='8' fill='%23178A5E' fill-opacity='.85'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EDF1F7;
+    --surface: #FFFFFF;
+    --ink: #1B2335;
+    --muted: #586277;
+    --rule: #CDD5E2;
+    --l1: #2F5DE0;
+    --l2: #7A4FD6;
+    --l3: #178A5E;
+    --l4: #C9700C;
+    --l5: #C93C6E;
+    --focus: #2F5DE0;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111827;
+      --surface: #1A2335;
+      --ink: #E8EDF6;
+      --muted: #9DA8BD;
+      --rule: #2C3954;
+      --l1: #7194FF;
+      --l2: #AC8EFF;
+      --l3: #43C592;
+      --l4: #F2A64F;
+      --l5: #F0739F;
+      --focus: #7194FF;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111827; --surface: #1A2335; --ink: #E8EDF6; --muted: #9DA8BD; --rule: #2C3954;
+    --l1: #7194FF; --l2: #AC8EFF; --l3: #43C592; --l4: #F2A64F; --l5: #F0739F; --focus: #7194FF;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1.0625rem/1.55 "Figtree", system-ui, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  /* Hero */
+  header { padding: 72px 0 40px; }
+  h1 {
+    font-family: "Bricolage Grotesque", "Figtree", sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.25rem, 11vw, 6rem);
+    line-height: .92;
+    letter-spacing: -0.035em;
+    margin: 0 0 20px;
+  }
+  .lead { font-size: 1.1875rem; color: var(--muted); max-width: 34em; margin: 0 0 36px; }
+
+  .track { position: relative; display: flex; justify-content: space-between; align-items: center; margin: 0 6px 14px; }
+  .track::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px;
+    background: var(--rule); border-radius: 2px;
+  }
+  .track-fill {
+    position: absolute; left: 0; top: 50%; height: 4px; margin-top: -2px; width: 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--l1), var(--l2), var(--l3), var(--l4), var(--l5));
+    background-size: var(--full, 100%) 100%;
+    transition: width .5s ease;
+  }
+  .stop {
+    position: relative; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--bg); border: 4px solid var(--c);
+    display: block;
+  }
+  .stop.done { background: var(--c); }
+  .progress-text { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .9375rem; color: var(--muted); margin: 0; }
+  .progress-text strong { color: var(--ink); font-weight: 600; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 28px 0 0; padding: 0; list-style: none; font-size: .9375rem; color: var(--muted); }
+  .legend li { display: flex; align-items: center; gap: 8px; }
+
+  /* Stages */
+  main { padding-bottom: 24px; }
+  .stage { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; }
+  .rail { position: relative; display: flex; justify-content: center; }
+  .rail::before {
+    content: ""; position: absolute; top: 44px; bottom: -4px; left: 50%; width: 4px; margin-left: -2px;
+    background: repeating-linear-gradient(to bottom, var(--rule) 0 8px, transparent 8px 14px);
+  }
+  .stage.done .rail::before { background: var(--c); }
+  .stage:last-child .rail::before { display: none; }
+  .station {
+    position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--surface); border: 4px solid var(--c);
+    font: 700 1.125rem/1 "Bricolage Grotesque", sans-serif; color: var(--ink);
+  }
+  .stage.done .station { background: var(--c); color: #fff; }
+  .station svg { display: none; }
+  .stage.done .station svg { display: block; }
+  .stage.done .station span { display: none; }
+
+  details { padding-bottom: 36px; }
+  summary {
+    list-style: none; cursor: pointer; border-radius: 10px; padding: 2px 4px 2px 0;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+  .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  h2 {
+    font-family: "Bricolage Grotesque", "Figtree", sans-serif;
+    font-weight: 700; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.015em;
+    margin: 8px 0 4px;
+  }
+  .chev { flex: none; margin-top: 12px; width: 22px; height: 22px; color: var(--muted); transition: transform .2s ease; }
+  details[open] .chev { transform: rotate(180deg); }
+  .desc { margin: 0 0 10px; color: var(--muted); }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; font-size: .875rem; }
+  .fact { padding: 3px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--rule); color: var(--ink); }
+  .fact.count { border-color: var(--c); }
+
+  ul.tasks { list-style: none; margin: 16px 0 0; padding: 0; background: var(--surface); border-radius: 14px; border: 1px solid var(--rule); }
+  ul.tasks li + li { border-top: 1px solid var(--rule); }
+  .task { display: grid; grid-template-columns: 26px 1fr; gap: 14px; padding: 14px 16px; cursor: pointer; align-items: start; }
+  .task input {
+    appearance: none; -webkit-appearance: none; margin: 1px 0 0; width: 24px; height: 24px; border-radius: 7px;
+    border: 2px solid var(--c); background: transparent; cursor: pointer; display: grid; place-items: center;
+  }
+  .task input::after {
+    content: ""; width: 6px; height: 12px; border: solid #fff; border-width: 0 3px 3px 0;
+    transform: rotate(45deg) translate(-1px, -1px) scale(0); transition: transform .15s ease;
+  }
+  .task input:checked { background: var(--c); }
+  .task input:checked::after { transform: rotate(45deg) translate(-1px, -1px) scale(1); }
+  .task input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .task-text { display: block; }
+  .task input:checked + .task-body .task-text { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .tag { display: inline-block; margin-top: 6px; font-size: .8125rem; font-weight: 600; padding: 1px 9px; border-radius: 999px; }
+  .tag.high { background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--ink); }
+  .tag.medium { border: 1px solid var(--rule); color: var(--ink); font-weight: 500; }
+  .tag.low { color: var(--muted); font-weight: 500; padding-left: 0; }
+
+  /* Tips */
+  .tips { margin: 8px 0 0; padding: 28px 24px; background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; }
+  .tips h2 { margin-top: 0; }
+  .tips ul { margin: 12px 0 0; padding-left: 1.2em; }
+  .tips li + li { margin-top: 6px; }
+
+  footer { padding: 32px 0 56px; font-size: .9375rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
+  button.reset {
+    font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--rule);
+    border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  }
+  button.reset:hover { border-color: var(--muted); }
+  button.reset:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  @media (max-width: 520px) {
+    header { padding-top: 48px; }
+    .stage { grid-template-columns: 36px 1fr; column-gap: 12px; }
+    .station { width: 36px; height: 36px; font-size: 1rem; border-width: 3px; }
+    .rail::before { top: 36px; }
+    h2 { font-size: 1.3125rem; margin-top: 4px; }
+    .chev { margin-top: 6px; }
+    .task { padding: 12px 14px; gap: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Duo Język</h1>
+    <p class="lead">Ty i AI w jednej drużynie. Mapa nauki programowania z Cursorem, Claude i Gemini: od solidnego Pythona do własnych projektów.</p>
+
+    <div class="track" id="track" aria-hidden="true">
+      <span class="track-fill" id="trackFill"></span>
+    </div>
+    <p class="progress-text" aria-live="polite">
+      <span>Ukończone: <strong id="doneCount">0</strong> z <strong id="totalCount">0</strong> zadań</span>
+      <span><strong id="pct">0%</strong> trasy</span>
+    </p>
+
+    <ul class="legend" aria-label="Priorytety">
+      <li><span class="tag high" style="--c: var(--l1); margin:0">Najpierw</span> zrób to na początku</li>
+      <li><span class="tag medium" style="margin:0">Ważne</span> ważne, ale elastyczne</li>
+      <li><span class="tag low" style="margin:0">Dodatkowe</span> miło mieć</li>
+    </ul>
+  </header>
+
+  <main id="stages"></main>
+
+  <section class="tips" aria-labelledby="tips-h">
+    <h2 id="tips-h">Wskazówki na dobry start</h2>
+    <ul>
+      <li>Zawsze proś AI o wyjaśnienie kodu, którego w pełni nie rozumiesz.</li>
+      <li>Zaczynaj projekt od luźnego pomysłu. AI pomoże Ci go dopracować.</li>
+      <li>Nie bój się „głupich” pytań. AI nie ocenia.</li>
+      <li>Buduj rzeczy, których naprawdę chcesz używać albo które chcesz pokazać.</li>
+      <li>Zapisuj najlepsze rozmowy z AI, aby wrócić do nich później.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Postęp zapisuje się w tej przeglądarce.</span>
+    <button class="reset" type="button" id="reset">Wyczyść postęp</button>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var STAGES = [
+    {
+      id: 'foundation', color: '--l1',
+      title: 'Podstawy: wzmocnij Pythona',
+      desc: 'Wzmocnij umiejętności Pythona, aby lepiej współpracować z AI.',
+      time: '2–3 tygodnie',
+      items: [
+        ['python-intermediate', 'Opanuj podstawy Pythona: funkcje, klasy, obsługa błędów, operacje na plikach', 'high'],
+        ['python-libraries', 'Poznaj kluczowe biblioteki: requests, json, os, datetime', 'high'],
+        ['git-basics', 'Naucz się podstaw Gita: clone, add, commit, push, pull', 'high'],
+        ['virtual-envs', 'Zrozum środowiska wirtualne i zarządzanie pakietami (pip, conda)', 'medium'],
+        ['project-structure', 'Naucz się poprawnie układać strukturę projektu w Pythonie', 'medium']
+      ]
+    },
+    {
+      id: 'ai-tools', color: '--l2',
+      title: 'Opanowanie narzędzi AI',
+      desc: 'Naucz się programować razem z AI, a nie tylko kopiować jego kod.',
+      time: '3–4 tygodnie',
+      items: [
+        ['cursor-setup', 'Zainstaluj Cursor i poznaj jego kluczowe funkcje', 'high'],
+        ['prompting-basics', 'Opanuj skuteczne promptowanie: bądź konkretny, podawaj kontekst, proś o wyjaśnienia', 'high'],
+        ['code-review', 'Naucz się sprawdzać i rozumieć kod z AI, zanim go użyjesz', 'high'],
+        ['debugging-with-ai', 'Ćwicz debugowanie z AI: opisz błąd, poproś o poprawkę, zrozum rozwiązanie', 'high'],
+        ['iterative-development', 'Opanuj pracę iteracyjną: zacznij prosto i rozbudowuj krok po kroku z AI', 'medium'],
+        ['ai-tools-comparison', 'Wypróbuj różne narzędzia AI (Claude, Cursor, Copilot) i wybierz swoje ulubione', 'low']
+      ]
+    },
+    {
+      id: 'vibe-projects', color: '--l3',
+      title: 'Projekty vibe coding',
+      desc: 'Buduj ciekawe rzeczy z pomocą AI.',
+      time: '4–6 tygodni',
+      items: [
+        ['web-scraper', 'Zbuduj web scraper dla tematu, który Cię interesuje', 'high'],
+        ['api-project', 'Stwórz projekt, który korzysta z API (pogoda, wiadomości, media społecznościowe)', 'high'],
+        ['data-viz', 'Zrób wizualizacje danych w matplotlib lub plotly', 'medium'],
+        ['automation-script', 'Zautomatyzuj coś nudnego w swoim życiu', 'medium'],
+        ['simple-web-app', 'Zbuduj prostą aplikację webową we Flasku lub FastAPI', 'medium'],
+        ['cli-tool', 'Stwórz narzędzie wiersza poleceń, które rozwiązuje konkretny problem', 'low']
+      ]
+    },
+    {
+      id: 'advanced-vibe', color: '--l4',
+      title: 'Zaawansowany vibe coding',
+      desc: 'Zostań mistrzem programowania z AI.',
+      time: '6–8 tygodni',
+      items: [
+        ['testing-with-ai', 'Naucz się pisać i rozumieć testy z pomocą AI', 'high'],
+        ['refactoring', 'Opanuj refaktoryzację kodu z pomocą AI', 'high'],
+        ['documentation', 'Twórz dobrą dokumentację i komentarze z pomocą AI', 'medium'],
+        ['performance-optimization', 'Naucz się optymalizować wydajność kodu dzięki wskazówkom AI', 'medium'],
+        ['design-patterns', 'Zrozum popularne wzorce projektowe dzięki wyjaśnieniom AI', 'medium'],
+        ['deployment', 'Wdrażaj projekty z pomocą AI (Heroku, Vercel itp.)', 'low']
+      ]
+    },
+    {
+      id: 'specialization', color: '--l5',
+      title: 'Wybierz swoją ścieżkę',
+      desc: 'Wybierz specjalizację i wejdź w nią głęboko.',
+      time: 'Na bieżąco',
+      items: [
+        ['web-dev', 'Web development: Django lub Flask, React, projekty full-stack', 'high'],
+        ['data-science', 'Data science: pandas, numpy, podstawy ML, notatniki Jupyter', 'high'],
+        ['automation', 'Automatyzacja i DevOps: Docker, CI/CD, usługi chmurowe', 'medium'],
+        ['ai-ml', 'AI i ML: TensorFlow, PyTorch, budowa własnych narzędzi AI', 'medium'],
+        ['game-dev', 'Tworzenie gier: Pygame, mechaniki gier, projekty interaktywne', 'low']
+      ]
+    }
+  ];
+  var TAGS = { high: 'Najpierw', medium: 'Ważne', low: 'Dodatkowe' };
+  var KEY = 'duo-jezyk-postep-v1';
+
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
+
+  var total = STAGES.reduce(function (n, s) { return n + s.items.length; }, 0);
+  document.getElementById('totalCount').textContent = total;
+
+  // Hero track stops
+  var track = document.getElementById('track');
+  STAGES.forEach(function (s) {
+    var stop = document.createElement('span');
+    stop.className = 'stop';
+    stop.style.setProperty('--c', 'var(' + s.color + ')');
+    stop.dataset.stage = s.id;
+    track.appendChild(stop);
+  });
+
+  // Stages
+  var root = document.getElementById('stages');
+  var chev = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var tick = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  STAGES.forEach(function (s, i) {
+    var sec = document.createElement('section');
+    sec.className = 'stage';
+    sec.id = s.id;
+    sec.style.setProperty('--c', 'var(' + s.color + ')');
+    sec.setAttribute('aria-labelledby', 'h-' + s.id);
+
+    var html = '<div class="rail"><div class="station" aria-hidden="true"><span>' + (i + 1) + '</span>' + tick + '</div></div>';
+    html += '<details' + (i === 0 ? ' open' : '') + '><summary><div class="head"><h2 id="h-' + s.id + '">' + s.title + '</h2>' + chev + '</div>';
+    html += '<p class="desc">' + s.desc + '</p>';
+    html += '<p class="facts"><span class="fact">' + s.time + '</span><span class="fact count" data-count="' + s.id + '"></span></p></summary>';
+    html += '<ul class="tasks">';
+    s.items.forEach(function (it) {
+      var id = 't-' + it[0];
+      html += '<li><label class="task" for="' + id + '"><input type="checkbox" id="' + id + '" data-key="' + it[0] + '"' + (done[it[0]] ? ' checked' : '') + '>' +
+        '<span class="task-body"><span class="task-text">' + it[1] + '</span><span class="tag ' + it[2] + '">' + TAGS[it[2]] + '</span></span></label></li>';
+    });
+    html += '</ul></details>';
+    sec.innerHTML = html;
+    root.appendChild(sec);
+  });
+
+  // Keep the checked state next to the strike-through style (input + .task-body)
+  root.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t.matches('input[type="checkbox"]')) return;
+    if (t.checked) { done[t.dataset.key] = true; } else { delete done[t.dataset.key]; }
+    save();
+    update();
+  });
+
+  function update() {
+    var count = 0;
+    STAGES.forEach(function (s) {
+      var n = s.items.filter(function (it) { return done[it[0]]; }).length;
+      count += n;
+      var complete = n === s.items.length;
+      document.getElementById(s.id).classList.toggle('done', complete);
+      track.querySelector('[data-stage="' + s.id + '"]').classList.toggle('done', complete);
+      document.querySelector('[data-count="' + s.id + '"]').textContent = n + ' z ' + s.items.length + ' gotowe';
+    });
+    var pct = Math.round((count / total) * 100);
+    document.getElementById('doneCount').textContent = count;
+    document.getElementById('pct').textContent = pct + '%';
+    var fill = document.getElementById('trackFill');
+    fill.style.width = pct + '%';
+    fill.style.setProperty('--full', (pct > 0 ? (10000 / pct) : 100) + '%');
+  }
+
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!confirm('Wyczyścić cały postęp? Tej operacji nie można cofnąć.')) return;
+    done = {};
+    save();
+    root.querySelectorAll('input[type="checkbox"]').forEach(function (c) { c.checked = false; });
+    update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
