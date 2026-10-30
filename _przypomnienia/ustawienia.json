@@ -1,0 +1,10 @@
+{
+  "strefa": "Europe/Dublin",
+  "pierwszePrzypomnienie": 19,
+  "ostatniaSzansa": 21,
+  "najwczesniej": 8,
+  "najpozniej": 22,
+  "ciszaPoDniach": 7,
+  "aplikacja": "https://dakowa.github.io/duo-jezyk/",
+  "serwer": "https://ntfy.sh"
+}
