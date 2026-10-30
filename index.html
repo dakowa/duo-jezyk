@@ -294,7 +294,7 @@
   .board .squares { display: grid; grid-template-columns: repeat(8, 1fr); border-radius: 6px; overflow: hidden; aspect-ratio: 1; border: 2px solid #6B5640; }
   .sq { display: grid; place-items: center; font-size: clamp(1.5rem, 8vw, 2.2rem); line-height: 1; aspect-ratio: 1; }
   .sq.l { background: #EED9B6; } .sq.d { background: #B98A5E; }
-  .sq .w { color: #fff; -webkit-text-stroke: 1.2px #2B1E12; text-shadow: 0 1px 0 #2B1E12; }
+  .sq .w { color: #FFFDF8; -webkit-text-stroke: 1.4px #2B1E12; paint-order: stroke fill; text-shadow: 0 1px 1px rgb(0 0 0 / .35); }
   .sq .b { color: #1B140E; }
   .ranks { display: grid; grid-template-rows: repeat(8, 1fr); font-size: .75rem; color: var(--muted); text-align: center; align-items: center; }
   .files { grid-column: 2; display: grid; grid-template-columns: repeat(8, 1fr); font-size: .75rem; color: var(--muted); text-align: center; }
@@ -986,7 +986,7 @@
     for (i = 1; i <= a.length; i++) for (j = 1; j <= b.length; j++) dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
     return dp[a.length][b.length] / a.length;
   }
-  var PIECES = { K: '♔', Q: '♕', R: '♖', B: '♗', N: '♘', P: '♙', k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+  var PIECES = { K: '♚', Q: '♛', R: '♜', B: '♝', N: '♞', P: '♟', k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' }; // filled glyphs, colour comes from CSS
   function board(fen) {
     var rows = fen.split(' ')[0].split('/'), sq = '', turn = fen.split(' ')[1] === 'b' ? 'Ruch czarnych' : 'Ruch białych';
     rows.forEach(function (row, r) {
