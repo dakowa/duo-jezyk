@@ -3,7 +3,9 @@
     "damian": {
       "aktywneDni": [],
       "godziny": {},
-      "wyslane": {},
+      "wyslane": {
+        "2026-10-30:pierwsze": true
+      },
       "cisza": false,
       "polaczony": true,
       "start": "2026-10-30"
