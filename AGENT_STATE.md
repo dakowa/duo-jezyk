@@ -6,7 +6,7 @@ Duo Język: polska mapa nauki programowania z AI + seria dni + codzienne przypom
 ## Zrobione
 - v1: mapa po polsku, 5 etapów, 28 zadań.
 - v2: seria dni, sesja dnia (5/15/30 min), pasek tygodnia, przypomnienia przez GitHub Actions + ntfy.
-- v3: profile bez rejestracji (Marcin, Teresa, Diana, Damian + „Dodaj osobę”), osobny postęp i przypomnienia dla każdej osoby, strefa czasowa z przeglądarki, Kora w panelu dnia (nastrój: zadowolona / czeka / smutna), instalacja na ekran telefonu (manifest, service worker, skróty ?sesja=5|15, karta „Dodaj Korę na ekran” dla Androida i iPhone'a, plakietka na ikonie).
+- v3: profile bez rejestracji (Marcin, Teresa, Diana, Damian + „Dodaj osobę”), osobny postęp i przypomnienia dla każdej osoby, strefa czasowa z przeglądarki, Kora w panelu dnia (nastrój: zadowolona / czeka / smutna), instalacja na ekran telefonu (manifest, service worker, skróty ?sesja=5|15, karta „Dodaj Duo Język na ekran telefonu” dla Androida i iPhone'a, plakietka na ikonie).
 - Strona główna: repo dakowa/dakowa.github.io z listą projektów.
 
 ## Pliki

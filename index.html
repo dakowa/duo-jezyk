@@ -290,7 +290,7 @@
   <section class="install" id="install" aria-labelledby="inst-h" hidden>
     <img src="ikony/kora.svg" alt="">
     <div>
-      <h2 id="inst-h">Dodaj Korę na ekran telefonu</h2>
+      <h2 id="inst-h">Dodaj Duo Język na ekran telefonu</h2>
       <p id="installText"></p>
       <ol id="iosSteps" hidden>
         <li>Dotknij „Udostępnij” (kwadrat ze strzałką) na pasku Safari.</li>
@@ -339,7 +339,7 @@
         <button class="btn" type="button" id="disconnect">Odłącz to urządzenie</button>
       </div>
     </div>
-    <p class="note"><button class="link-btn" type="button" id="showInstall">Dodaj ikonę Kory na ekran telefonu</button></p>
+    <p class="note"><button class="link-btn" type="button" id="showInstall">Dodaj Duo Język na ekran telefonu</button></p>
   </section>
 
   <section class="panel" aria-labelledby="tips-h">
@@ -727,7 +727,7 @@
   }
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; renderInstall(); });
   window.addEventListener('appinstalled', function () {
-    deferredPrompt = null; store(K_INSTALL, { installed: true }); renderInstall(); toast('Kora jest już na ekranie.');
+    deferredPrompt = null; store(K_INSTALL, { installed: true }); renderInstall(); toast('Duo Język jest już na ekranie.');
   });
   $('installBtn').addEventListener('click', function () {
     if (!deferredPrompt) return;
@@ -739,7 +739,7 @@
   });
   $('installLater').addEventListener('click', function () {
     store(K_INSTALL, { until: Date.now() + 3 * 86400000 }); renderInstall();
-    toast('Dobrze. Kora zapyta ponownie za kilka dni.');
+    toast('Dobrze. Zapytam ponownie za kilka dni.');
   });
   $('showInstall').addEventListener('click', function () {
     if (standalone()) { toast('Duo Język już działa jako aplikacja na tym ekranie.'); return; }
