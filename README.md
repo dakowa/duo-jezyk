@@ -12,7 +12,9 @@ Strona: https://dakowa.github.io/duo-jezyk/
 | Diana | Medycyna genetyczna, Motocykl: technika jazdy, Angielski |
 | Teresa | Szachy, Grzyby i lasy grzybowe |
 
-Każdy może dodać inny kurs przyciskiem kursu w lewym górnym rogu. Profile działają bez rejestracji; postęp zapisuje się na urządzeniu.
+Każdy może dodać inny kurs przyciskiem kursu w lewym górnym rogu.
+
+**Przeskakiwanie działów:** na banerze zablokowanego działu jest przycisk „Przeskocz tutaj”. Egzamin z wcześniejszych działów (3 szanse, bez serduszek) odblokowuje ten dział. Na bieżącym dziale: „Znasz to? Zalicz egzaminem”. Profile działają bez rejestracji; postęp zapisuje się na urządzeniu.
 
 ## Jak dopisać lekcję
 Treść kursu jest w `kursy/<id>.js`. Lekcja to `{ id, tytul, zadania: [...] }`. Lekcja bez `zadania` pokazuje się jako „wkrótce”.

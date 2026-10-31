@@ -1,5 +1,5 @@
 // Duo Język: offline support. Network first, so updates appear right away when online.
-var CACHE = 'duo-jezyk-v4';
+var CACHE = 'duo-jezyk-v5';
 var SHELL = ['./', 'manifest.webmanifest', 'ikony/kora.svg', 'ikony/kora-192.png',
   'kursy/programowanie.js', 'kursy/angielski.js', 'kursy/genetyka.js', 'kursy/motocykl.js', 'kursy/szachy.js', 'kursy/grzyby.js'];
 

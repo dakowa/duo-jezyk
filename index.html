@@ -60,7 +60,7 @@
   .chip svg { width: 14px; height: 14px; color: var(--muted); flex: none; }
   .badge {
     width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; flex: none;
-    color: #fff; font: 800 .8125rem/1 "Bricolage Grotesque", sans-serif; background: var(--c, var(--muted));
+    color: #fff; font: 800 .75rem/1 "Bricolage Grotesque", sans-serif; letter-spacing: -.02em; background: var(--c, var(--muted));
   }
   .avatar {
     width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none;
@@ -116,6 +116,14 @@
   .unit-banner small { display: block; opacity: .85; font-weight: 600; }
   .unit-banner h2 { margin: 2px 0 0; font-size: 1.3125rem; }
   .unit-banner p { margin: 4px 0 0; opacity: .92; font-size: .9375rem; }
+  .jump {
+    margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    border: 2px solid rgb(255 255 255 / .85); background: rgb(255 255 255 / .14); color: #fff;
+    border-radius: 12px; padding: 7px 14px; font-weight: 800; font-size: .9375rem;
+  }
+  .jump:hover { background: rgb(255 255 255 / .24); }
+  .jump svg { width: 18px; height: 18px; flex: none; }
+  .jump-note { display: block; margin-top: 6px; font-size: .8125rem; opacity: .85; }
   .nodes { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 24px 0 8px; }
   .node-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; transform: translateX(var(--x, 0)); }
   .node {
@@ -164,21 +172,26 @@
     width: min(460px, calc(100% - 28px)); max-height: calc(100% - 28px);
   }
   dialog::backdrop { background: rgb(17 24 39 / .55); }
+  dialog { overflow-x: hidden; }
   dialog h2 { margin: 0; font-size: 1.375rem; }
+  dialog h2:focus { outline: none; }
   dialog h3 { margin: 18px 0 0; font-size: 1rem; color: var(--muted); font-family: "Figtree", sans-serif; letter-spacing: 0; }
-  .plist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
-  .pitem { display: flex; align-items: center; gap: 6px; }
+  .plist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .pitem { display: flex; align-items: center; gap: 4px; min-width: 0; }
   .pbtn {
-    flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-align: left;
+    flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-align: left;
     border: 2px solid var(--rule); border-radius: 14px; background: transparent; cursor: pointer;
   }
   .pbtn:hover { border-color: var(--muted); }
   .pbtn.active { border-color: var(--ink); }
-  .pname { flex: 1; min-width: 0; font-weight: 700; }
-  .pname small { display: block; font-weight: 500; color: var(--muted); font-size: .8125rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .pstreak { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: .9375rem; }
+  .pname { flex: 1; min-width: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .pname small {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    margin-top: 2px; font-weight: 500; color: var(--muted); font-size: .8125rem; line-height: 1.3; white-space: normal;
+  }
+  .pstreak { flex: none; display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: .9375rem; }
   .pstreak svg { width: 14px; height: 17px; color: var(--flame); }
-  .pdel { background: none; border: none; color: var(--muted); cursor: pointer; padding: 8px; font-size: .875rem; text-decoration: underline; }
+  .pdel { flex: none; background: none; border: none; color: var(--muted); cursor: pointer; padding: 8px 4px; font-size: .875rem; text-decoration: underline; }
   .addform { display: flex; gap: 8px; margin-top: 14px; }
   .addform input { flex: 1; min-width: 0; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--rule); background: var(--bg); }
   .dlg-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; }
@@ -316,6 +329,7 @@
     transition: opacity .25s ease, transform .25s ease; pointer-events: none; max-width: calc(100% - 32px); text-align: center;
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  body.in-lesson .toast { bottom: calc(120px + env(safe-area-inset-bottom)); }
 
   @media (max-width: 420px) {
     .chip .lbl { max-width: 6.5em; }
@@ -400,7 +414,7 @@
 </div>
 
 <dialog id="profiles" aria-labelledby="prof-h">
-  <h2 id="prof-h">Kto się uczy?</h2>
+  <h2 id="prof-h" tabindex="-1" autofocus>Kto się uczy?</h2>
   <ul class="plist" id="plist"></ul>
   <form class="addform" id="addForm">
     <input id="addName" maxlength="24" placeholder="Imię nowej osoby" aria-label="Imię nowej osoby" autocomplete="off">
@@ -413,7 +427,7 @@
 </dialog>
 
 <dialog id="courses" aria-labelledby="course-h">
-  <h2 id="course-h">Twoje kursy</h2>
+  <h2 id="course-h" tabindex="-1" autofocus>Twoje kursy</h2>
   <ul class="plist" id="clist"></ul>
   <h3 id="moreH">Dodaj kurs</h3>
   <ul class="plist" id="cmore"></ul>
@@ -493,7 +507,8 @@
     mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg>',
     soundOn: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 9a4 4 0 0 1 0 6"/></svg>',
     soundOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 9l5 6M21 9l-5 6"/></svg>',
-    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+    skip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6l6 6-6 6M13 6l6 6-6 6"/></svg>'
   };
 
   // ---------- Kora, the collie mascot ----------
@@ -703,12 +718,19 @@
     var list = flat(c), html = '', offsets = [0, 44, 66, 44, 0, -44, -66, -44], k = 0;
     var nx = nextLesson(c);
     html += '<div class="course-head"><h1>' + esc(c.tytul) + '</h1><p>' + esc(c.opis) + '</p>' + (c.uwaga ? '<p class="note-box">' + md(c.uwaga) + '</p>' : '') + '</div>';
-    var idx = 0;
+    var idx = 0, states = list.map(function (f, i) { return lessonState(c, f, i, list); });
     c.dzialy.forEach(function (u, ui) {
-      var soon = !u.lekcje.some(playable);
-      html += '<div class="unit" style="--c:' + esc(c.kolor) + '"><div class="unit-banner' + (soon ? ' soon' : '') + '"><small>Dział ' + (ui + 1) + (soon ? ' · wkrótce' : '') + '</small><h2>' + esc(u.tytul) + '</h2>' + (u.opis ? '<p>' + esc(u.opis) + '</p>' : '') + '</div><div class="nodes">';
+      var soon = !u.lekcje.some(playable), us = states.slice(idx, idx + u.lekcje.length);
+      var left = us.filter(function (s) { return s === 'open' || s === 'locked'; });
+      var mode = !left.length ? '' : left.indexOf('open') !== -1 ? 'out' : 'jump';
+      var exam = mode === 'jump'
+        ? '<button type="button" class="jump" data-exam="' + ui + '" data-mode="jump">' + ICON.skip + 'Przeskocz tutaj</button><span class="jump-note">Zdaj egzamin z wcześniejszych działów i zacznij od tego miejsca.</span>'
+        : mode === 'out'
+        ? '<button type="button" class="jump" data-exam="' + ui + '" data-mode="out">' + ICON.skip + 'Znasz to? Zalicz egzaminem</button>'
+        : '';
+      html += '<div class="unit" style="--c:' + esc(c.kolor) + '"><div class="unit-banner' + (soon ? ' soon' : '') + '"><small>Dział ' + (ui + 1) + (soon ? ' · wkrótce' : '') + '</small><h2>' + esc(u.tytul) + '</h2>' + (u.opis ? '<p>' + esc(u.opis) + '</p>' : '') + exam + '</div><div class="nodes">';
       u.lekcje.forEach(function (l) {
-        var f = list[idx], st = lessonState(c, f, idx, list), cur = nx && nx.lesson.id === l.id;
+        var st = states[idx], cur = nx && nx.lesson.id === l.id;
         var icon = st === 'done' ? ICON.check : st === 'locked' ? ICON.lock : st === 'soon' ? ICON.soon : ICON.star;
         html += '<div class="node-wrap' + (cur ? ' current' : '') + '" style="--x:' + offsets[k % offsets.length] + 'px">' +
           (cur ? '<span class="start-tip">' + (courseProgress(c.id).done ? 'Dalej' : 'Start') + '</span>' : '') +
@@ -722,6 +744,8 @@
     el.innerHTML = html;
   }
   $('path').addEventListener('click', function (e) {
+    var x = e.target.closest('[data-exam]');
+    if (x) return startExam(course(), +x.dataset.exam, x.dataset.mode);
     var b = e.target.closest('[data-lesson]'); if (!b) return;
     var c = course(), list = flat(c), i = list.findIndex(function (f) { return f.lesson.id === b.dataset.lesson; });
     var st = lessonState(c, list[i], i, list);
@@ -832,16 +856,17 @@
     next();
   }
   function openOverlay() {
-    lesson.hidden = false; document.body.style.overflow = 'hidden'; renderSoundBtn();
-    $('lHearts').innerHTML = ICON.heart + (L && L.practice ? '∞' : hearts().n);
+    lesson.hidden = false; document.body.style.overflow = 'hidden'; document.body.classList.add('in-lesson'); renderSoundBtn();
+    $('lHearts').innerHTML = ICON.heart + (L && L.exam ? L.exam.lives : L && L.practice ? '∞' : hearts().n);
+    $('lHearts').setAttribute('aria-label', L && L.exam ? 'Pozostałe szanse w egzaminie' : 'Serduszka');
   }
   function closeOverlay() {
-    lesson.hidden = true; document.body.style.overflow = ''; L = null;
+    lesson.hidden = true; document.body.style.overflow = ''; document.body.classList.remove('in-lesson'); L = null;
     try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {}
     renderAll();
   }
   $('lClose').addEventListener('click', function () {
-    if (L && L.queue && (L.done > 0 || L.mistakes > 0) && L.state !== 'end' && !confirm('Zakończyć lekcję? Postęp tej lekcji przepadnie.')) return;
+    if (L && L.queue && (L.done > 0 || L.mistakes > 0) && L.state !== 'end' && !confirm(L.exam ? 'Przerwać egzamin? Wynik nie zostanie zapisany.' : 'Zakończyć lekcję? Postęp tej lekcji przepadnie.')) return;
     closeOverlay();
   });
   function setBar() { $('lBar').style.width = L ? Math.round(100 * L.done / L.total) + '%' : '0'; }
@@ -872,7 +897,8 @@
       L.done++; L.run++; sfx.ok();
     } else {
       L.mistakes++; L.run = 0; sfx.bad();
-      L.queue.push(L.z);
+      if (L.exam) { L.exam.lives--; L.done++; $('lHearts').innerHTML = ICON.heart + L.exam.lives; }
+      else L.queue.push(L.z);
       if (!L.practice) { var left = loseHeart(); $('lHearts').innerHTML = ICON.heart + left; }
     }
     setBar();
@@ -884,6 +910,7 @@
       (L.z.wyj ? '<p>' + md(L.z.wyj) + '</p>' : '') + '</div></div>' +
       '<button class="check ' + (res.ok ? '' : 'bad') + '" type="button" id="goBtn">Dalej</button>';
     $('goBtn').onclick = function () {
+      if (L.exam && L.exam.lives <= 0) return examFail();
       if (!res.ok && !L.practice && hearts().n <= 0) return noHearts();
       next();
     };
@@ -891,6 +918,7 @@
   }
 
   function finish() {
+    if (L.exam) return examPass();
     L.state = 'end';
     var c = L.c, first = days[todayStr()] === undefined, before = xpToday();
     var xp = L.practice ? 5 : 10 + (L.mistakes === 0 ? 5 : 0);
@@ -915,6 +943,80 @@
     lFootIn.innerHTML = '<button class="check" type="button" id="goBtn">Dalej</button>';
     $('goBtn').onclick = closeOverlay;
     setBar();
+  }
+  // ---------- Exams: skip ahead (Duolingo „jump here”) ----------
+  // mode 'jump': exam on not-done lessons of earlier units, unlocks unit ui.
+  // mode 'out':  exam on not-done lessons of unit ui, completes that unit.
+  var EXAM_TYPES = ['wybor', 'luka', 'kafelki', 'sluchaj', 'dyktando', 'wpisz', 'blad', 'szachy'];
+  var EXAM_LIVES = 3;
+  function examTasks(c, limit) {
+    var groups = [];
+    flat(c).forEach(function (f) {
+      if (f.ui >= limit || !playable(f.lesson) || isDone(c.id, f.lesson.id)) return;
+      var pool = f.lesson.zadania.filter(function (z) { return EXAM_TYPES.indexOf(z.t) !== -1; });
+      if (pool.length) groups.push(shuffle(pool));
+    });
+    var max = Math.min(15, Math.max(10, groups.length * 3)), out = [], round = 0;
+    while (out.length < max && groups.some(function (g) { return g.length > round; })) {
+      groups.forEach(function (g) { if (out.length < max && g[round]) out.push(g[round]); });
+      round++;
+    }
+    return shuffle(out);
+  }
+  function startExam(c, ui, mode) {
+    if (!c) return;
+    var limit = mode === 'jump' ? ui : ui + 1, tasks = examTasks(c, limit);
+    if (!tasks.length) return toast('Brak pytań do egzaminu w tym dziale.');
+    var nr = ui + 1, scope = mode === 'jump' ? (ui === 1 ? 'z działu 1' : 'z działów 1–' + ui) : 'z działu ' + nr;
+    var intro = {
+      t: 'info', etykieta: 'Egzamin',
+      tytul: mode === 'jump' ? 'Przeskocz do działu ' + nr : 'Zalicz dział ' + nr,
+      tekst: '**' + tasks.length + ' pytań** ' + scope + '.\nMożesz pomylić się najwyżej 2 razy. Trzeci błąd kończy egzamin.\n' +
+        (mode === 'jump' ? 'Gdy zdasz, wcześniejsze lekcje zostaną zaliczone, a dział ' + nr + ' się odblokuje.' : 'Gdy zdasz, cały dział zostanie zaliczony, a następny się odblokuje.') +
+        '\nEgzamin nie zabiera serduszek. Możesz podchodzić do niego dowolnie wiele razy.'
+    };
+    L = { c: c, lesson: { id: 'egzamin', tytul: intro.tytul, zadania: tasks }, practice: true,
+      exam: { ui: ui, limit: limit, mode: mode, lives: EXAM_LIVES, asked: tasks.length },
+      queue: [intro].concat(tasks), total: tasks.length + 1, done: 0, mistakes: 0, run: 0, start: Date.now(), h: null };
+    openOverlay();
+    next();
+  }
+  function examPass() {
+    L.state = 'end';
+    var c = L.c, ex = L.exam, first = days[todayStr()] === undefined, before = xpToday(), xp = 20;
+    var dm = doneMap(c.id), count = 0;
+    flat(c).forEach(function (f) {
+      if (f.ui < ex.limit && playable(f.lesson) && !dm[f.lesson.id]) { dm[f.lesson.id] = { razy: 0, najlepsze: 0, egzamin: todayStr() }; count++; }
+    });
+    saveKp();
+    days[todayStr()] = before + xp; saveDays();
+    ping(); sfx.done();
+    var acc = Math.round(100 * (ex.asked - L.mistakes) / ex.asked);
+    var secs = Math.round((Date.now() - L.start) / 1000), time = Math.floor(secs / 60) + ':' + pad(secs % 60);
+    var n = streak(), goalNow = before < DAILY_GOAL && before + xp >= DAILY_GOAL;
+    var unlocked = flat(c).filter(function (f) { return f.ui === ex.limit && playable(f.lesson); }).length > 0;
+    lFoot.className = 'l-foot';
+    lBody.innerHTML = '<div class="end">' + kora('happy') + '<h2>Egzamin zdany!</h2>' +
+      '<p>' + (ex.mode === 'jump' ? 'Dział ' + (ex.ui + 1) + ' odblokowany.' : 'Dział ' + (ex.ui + 1) + ' zaliczony.' + (unlocked ? ' Następny dział odblokowany.' : '')) +
+      ' Zaliczone lekcje: ' + count + '.</p>' +
+      '<div class="tiles3"><div class="t3" style="--c:var(--xp)"><small>XP</small><b>+' + xp + '</b></div>' +
+      '<div class="t3" style="--c:var(--ok)"><small>WYNIK</small><b>' + acc + '%</b></div>' +
+      '<div class="t3" style="--c:var(--brand)"><small>CZAS</small><b>' + time + '</b></div></div>' +
+      '<p>' + (first ? 'Seria przedłużona: <strong>' + n + ' ' + dni(n) + '</strong>!' : 'Seria: ' + n + ' ' + dni(n) + '.') +
+      (goalNow ? '<br><strong>Dzienny cel osiągnięty!</strong>' : '') + '</p></div>';
+    lFootIn.innerHTML = '<button class="check" type="button" id="goBtn">Dalej</button>';
+    $('goBtn').onclick = closeOverlay;
+    $('lBar').style.width = '100%';
+  }
+  function examFail() {
+    L.state = 'end';
+    var ex = L.exam, answered = L.done - 1, right = answered - L.mistakes;
+    lFoot.className = 'l-foot';
+    lBody.innerHTML = '<div class="end">' + kora('sad') + '<h2>Tym razem się nie udało</h2>' +
+      '<p>Poprawne odpowiedzi: ' + right + ' z ' + answered + '. Egzamin kończy się po trzecim błędzie.</p>' +
+      '<p>Przerób kilka lekcji i spróbuj ponownie. Serduszka zostają bez zmian.</p></div>';
+    lFootIn.innerHTML = '<button class="check neutral" type="button" id="goBtn">Wróć do ścieżki</button>';
+    $('goBtn').onclick = closeOverlay;
   }
   function noHearts() {
     if (L) L.state = 'end';
